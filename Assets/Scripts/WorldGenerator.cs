@@ -19,8 +19,14 @@ public class WorldGenerator : MonoBehaviour
         _chunkGenerator = new ChunkGenerator(_chungGenerationSetting);
         chunkData = _chunkGenerator.GenerateBasicDataForChunk();
 
-        GameObject tempChunk = new GameObject("Chunk", new System.Type[] { typeof(MeshRenderer), typeof(MeshFilter) });
-        tempChunk.GetComponent<MeshFilter>().mesh = new ChunkMeshGenerator(_chungGenerationSetting).CreateMesh(chunkData, tempChunk);
+        int groundLevel = LayerMask.NameToLayer("Ground");
+        GameObject tempChunk = new GameObject("Chunk", new System.Type[] { typeof(MeshRenderer), typeof(MeshFilter) , typeof(MeshCollider)});
+        tempChunk.layer = groundLevel;
+        var mesh = new ChunkMeshGenerator(_chungGenerationSetting).CreateMesh(chunkData, tempChunk);
+        
+        
+        tempChunk.GetComponent<MeshFilter>().mesh = mesh;
+        tempChunk.GetComponent <MeshCollider>().sharedMesh = mesh;
     }
 
     // Update is called once per frame
