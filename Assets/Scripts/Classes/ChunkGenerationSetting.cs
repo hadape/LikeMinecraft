@@ -17,5 +17,6 @@ namespace Assets.Scripts.Classes
         public int heightOffset = 60;
         public float heightIntensity = 5;
         public Material material;
+        public int viewDistance = 1;
     }
 }
