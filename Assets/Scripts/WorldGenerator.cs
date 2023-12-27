@@ -19,8 +19,13 @@ public class WorldGenerator : MonoBehaviour
     {
         _chunkMeshGenerator = new ChunkMeshGenerator(_chungGenerationSetting);
         _chunkGenerator = new ChunkGenerator(_chungGenerationSetting);
-        CreateChunk(0,0);
-        CreateChunk(0,1);
+        for (int x = -_chungGenerationSetting.viewDistance; x <=  _chungGenerationSetting.viewDistance; x++)
+        {
+            for (int z =  -_chungGenerationSetting.viewDistance;z <= _chungGenerationSetting.viewDistance; z++)
+            {
+                CreateChunk(x,z);
+            }
+        }
     }
 
     // Update is called once per frame
@@ -43,6 +48,7 @@ public class WorldGenerator : MonoBehaviour
 
         tempChunk.GetComponent<MeshFilter>().mesh = mesh;
         tempChunk.GetComponent<MeshCollider>().sharedMesh = mesh;
+        _activeChunks.Add(chunkData);
     }
 
 
