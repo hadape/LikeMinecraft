@@ -12,16 +12,26 @@ public class ChunkGenerator
         _setting = setting;
     }
 
-
-    public Dictionary<Vector3Int, Enums.BlockType> GenerateBasicDataForChunk()
+    public ChunkData GetChunkData(int chunkX, int chunkZ)
     {
+        return new ChunkData
+        {
+            Data = GenerateBasicDataForChunk(chunkX,chunkZ),
+            Coordinates = new Vector2Int(chunkX, chunkZ),
+        };
+    }
+
+    public Dictionary<Vector3Int, Enums.BlockType> GenerateBasicDataForChunk(int chunkX, int chunkZ)
+    {
+        var startingX = ChunkCoorToRealCoor.GetRealCoor(chunkX, _setting.chunkSize.x);
+        var startingZ = ChunkCoorToRealCoor.GetRealCoor(chunkZ, _setting.chunkSize.z);
         Dictionary<Vector3Int, Enums.BlockType> chunkBasicData = new Dictionary<Vector3Int, Enums.BlockType>();
         int height;
         Enums.BlockType blockType;
 
-        for(int x = 0;  x < _setting.chunkSize.x; x++)
+        for(int x = startingX;  x < _setting.chunkSize.x+ startingX; x++)
         {
-            for(int z=0;  z < _setting.chunkSize.z; z++) 
+            for(int z= startingZ;  z < _setting.chunkSize.z+ startingZ; z++) 
             {
                 height = GetHeighFromPerlinNoise(x, z);
                 

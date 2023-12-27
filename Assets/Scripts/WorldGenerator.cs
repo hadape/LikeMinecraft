@@ -8,25 +8,19 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField]
     private ChunkGenerationSetting _chungGenerationSetting = new ChunkGenerationSetting();
 
-    private Dictionary<Vector3Int,Enums.BlockType>chunkData;
 
     private ChunkGenerator _chunkGenerator;
+    private ChunkMeshGenerator _chunkMeshGenerator;
 
+    List<ChunkData> _activeChunks = new List<ChunkData>();
 
     // Start is called before the first frame update
     void Start()
     {
+        _chunkMeshGenerator = new ChunkMeshGenerator(_chungGenerationSetting);
         _chunkGenerator = new ChunkGenerator(_chungGenerationSetting);
-        chunkData = _chunkGenerator.GenerateBasicDataForChunk();
-
-        int groundLevel = LayerMask.NameToLayer("Ground");
-        GameObject tempChunk = new GameObject("Chunk", new System.Type[] { typeof(MeshRenderer), typeof(MeshFilter) , typeof(MeshCollider)});
-        tempChunk.layer = groundLevel;
-        var mesh = new ChunkMeshGenerator(_chungGenerationSetting).CreateMesh(chunkData, tempChunk);
-        
-        
-        tempChunk.GetComponent<MeshFilter>().mesh = mesh;
-        tempChunk.GetComponent <MeshCollider>().sharedMesh = mesh;
+        CreateChunk(0,0);
+        CreateChunk(0,1);
     }
 
     // Update is called once per frame
@@ -35,31 +29,22 @@ public class WorldGenerator : MonoBehaviour
         
     }
 
+    private void CreateChunk(int x,int z)
+    {
+       
+        var chunkData = _chunkGenerator.GetChunkData(x,z);
 
-    //private void OnDrawGizmos()
-    //{
-    //    if (chunkData != null)
-    //    {
-    //        for (int x = 0; x < _chungGenerationSetting.chunkSize.x; x++)
-    //        {
-    //            for (int y = 0; y < _chungGenerationSetting.chunkSize.y; y++)
-    //            {
-    //                for (int z = 0; z < _chungGenerationSetting.chunkSize.z; z++)
-    //                {
-    //                    switch (chunkData[new Vector3Int(x,y,z)])
-    //                    {
-    //                        case Enums.BlockType.Air: continue;
-    //                        case Enums.BlockType.Grass: Gizmos.color = Color.green; break;
-    //                        case Enums.BlockType.Dirt: Gizmos.color = Color.yellow; break;
-    //                        case Enums.BlockType.Rock: Gizmos.color = Color.gray; break;
-    //                        case Enums.BlockType.Bedrock: Gizmos.color = Color.black; break;
-    //                    }
-    //                    Gizmos.DrawWireCube(new Vector3(x, y, z), Vector3.one);
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
+        int groundLevel = LayerMask.NameToLayer("Ground");
+        GameObject tempChunk = new GameObject("Chunk", new System.Type[] { typeof(MeshRenderer), typeof(MeshFilter), typeof(MeshCollider) });
+        tempChunk.layer = groundLevel;
+
+        var mesh = new ChunkMeshGenerator(_chungGenerationSetting).CreateMesh(chunkData, tempChunk);
+
+
+        tempChunk.GetComponent<MeshFilter>().mesh = mesh;
+        tempChunk.GetComponent<MeshCollider>().sharedMesh = mesh;
+    }
+
 
 
 }

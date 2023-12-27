@@ -25,14 +25,16 @@ public class ChunkMeshGenerator
         _chunkGenerationSetting = chunkGenerationSetting;
     }
 
-    public Mesh CreateMesh(Dictionary<Vector3Int, Enums.BlockType> basicData, GameObject chunk)
+    public Mesh CreateMesh(ChunkData chunkData, GameObject chunk)
     {
+        var startingX = ChunkCoorToRealCoor.GetRealCoor(chunkData.Coordinates.x, _chunkGenerationSetting.chunkSize.x);
+        var startingZ = ChunkCoorToRealCoor.GetRealCoor(chunkData.Coordinates.y, _chunkGenerationSetting.chunkSize.z);
         meshRenderer = chunk.GetComponent<MeshRenderer>();
         meshRenderer.material = _chunkGenerationSetting.material;
         tris = 0; 
-        for (int x = 0; x< _chunkGenerationSetting.chunkSize.x; x++)
+        for (int x = startingX; x< _chunkGenerationSetting.chunkSize.x+ startingX; x++)
         {
-            for (int z = 0; z < _chunkGenerationSetting.chunkSize.z; z++)
+            for (int z = startingZ; z < _chunkGenerationSetting.chunkSize.z+ startingZ; z++)
             {
                 for (int y = 0; y < _chunkGenerationSetting.chunkSize.y; y++)
                 {
@@ -46,27 +48,27 @@ public class ChunkMeshGenerator
                         {
                             case Enums.Side.Left:
                                 checkingBlockPosition = currentBlockPosition + Vector3Int.left;
-                                DecideMesh(Cube.LeftSide, basicData);
+                                DecideMesh(Cube.LeftSide, chunkData.Data);
                                 break;
                             case Enums.Side.Right:
                                 checkingBlockPosition = currentBlockPosition + Vector3Int.right;
-                                DecideMesh(Cube.RightSide, basicData);
+                                DecideMesh(Cube.RightSide, chunkData.Data);
                                 break;
                             case Enums.Side.Up:
                                 checkingBlockPosition = currentBlockPosition + Vector3Int.up;
-                                DecideMesh(Cube.UpSide, basicData);
+                                DecideMesh(Cube.UpSide, chunkData.Data);
                                 break;
                             case Enums.Side.Down:
                                 checkingBlockPosition = currentBlockPosition + Vector3Int.down;
-                                DecideMesh(Cube.DownSide, basicData);
+                                DecideMesh(Cube.DownSide, chunkData.Data);
                                 break;
                             case Enums.Side.Front:
                                 checkingBlockPosition = currentBlockPosition + Vector3Int.forward;
-                                DecideMesh( Cube.FrontSide, basicData);
+                                DecideMesh( Cube.FrontSide, chunkData.Data);
                                 break;
                             case Enums.Side.Back:
                                 checkingBlockPosition = currentBlockPosition + Vector3Int.back;
-                                DecideMesh(Cube.BackSide, basicData);
+                                DecideMesh(Cube.BackSide, chunkData.Data);
                                 break;
 
                               
