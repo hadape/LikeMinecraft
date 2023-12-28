@@ -16,7 +16,7 @@ public class ChunkMeshGenerator
 
     MeshRenderer meshRenderer;
 
-    Mesh mesh = new Mesh();
+    Mesh mesh;
 
     ChunkGenerationSetting _chunkGenerationSetting;
 
@@ -27,6 +27,7 @@ public class ChunkMeshGenerator
 
     public Mesh CreateMesh(ChunkData chunkData, GameObject chunk)
     {
+        mesh = new Mesh();
         var startingX = ChunkCoorToRealCoor.GetRealCoor(chunkData.Coordinates.x, _chunkGenerationSetting.chunkSize.x);
         var startingZ = ChunkCoorToRealCoor.GetRealCoor(chunkData.Coordinates.y, _chunkGenerationSetting.chunkSize.z);
         meshRenderer = chunk.GetComponent<MeshRenderer>();

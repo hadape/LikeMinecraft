@@ -175,11 +175,48 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3754005568320277690, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7541797421323646187, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
+      propertyPath: field of view
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 7541797421323646187, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
+      propertyPath: far clip plane
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2792841470361399470, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 155028036}
   m_SourcePrefab: {fileID: 100100000, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
+--- !u!1 &155028032 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2792841470361399470, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
+  m_PrefabInstance: {fileID: 72061627}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &155028036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155028032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 185b69ea21844dc4ea841337f45c6e08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerCamera: {fileID: 1101613956}
+  ChunkInteractMask:
+    serializedVersion: 2
+    m_Bits: 512
+  maxDistance: 8
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -274,6 +311,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!4 &1101613956 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3754005568320277690, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
+  m_PrefabInstance: {fileID: 72061627}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1429775527
 GameObject:
   m_ObjectHideFlags: 0
