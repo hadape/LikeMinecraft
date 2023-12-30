@@ -11,7 +11,7 @@ namespace Assets.Scripts.Classes
     {
         public Dictionary<Vector3Int, Enums.BlockType> Data { get; set; }
         public Vector2Int Coordinates { get; set; }
-        public Mesh Mesh { get; set; }
+        public GameObject GameObject { get; set; }
 
 
 

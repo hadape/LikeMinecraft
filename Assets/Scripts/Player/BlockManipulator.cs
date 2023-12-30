@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
+
 
 public class BlockManipulator : MonoBehaviour
 {
@@ -14,7 +14,7 @@ public class BlockManipulator : MonoBehaviour
     [SerializeField]
     private float maxDistance = 8f;
 
-    public BlockEvent OnBlockPickUp;
+    public event EventHandler<OnBlockPickupEventArgs> OnBlockPickUp;
 
     void Update()
     {
@@ -26,11 +26,18 @@ public class BlockManipulator : MonoBehaviour
 
             if (Physics.Raycast(ray, out RaycastHit hitInfo, maxDistance, ChunkInteractMask))
             {
+                Debug.Log("Block hit");
+                Vector3 targetPoint = hitInfo.point - hitInfo.normal * .1f;
 
-                Vector3 hitPosition = hitInfo.point;
-               
+                Vector3Int targetBlock = new Vector3Int
+                {
+                    x = Mathf.RoundToInt(targetPoint.x),
+                    y = Mathf.RoundToInt(targetPoint.y),
+                    z = Mathf.RoundToInt(targetPoint.z)
+                };
 
-                OnBlockPickUp?.Invoke(hitPosition);
+
+                OnBlockPickUp?.Invoke(this, new OnBlockPickupEventArgs { BlockPosition = targetBlock });
             }
             else
             {

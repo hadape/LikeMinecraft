@@ -6,9 +6,9 @@ using UnityEngine;
 
 public class ChunkMeshGenerator 
 {
-    List<Vector3> vertices = new List<Vector3>();
-    List<int> triangles = new List<int>();
-    List<Color> colors = new List<Color>();
+    List<Vector3> vertices;
+    List<int> triangles;
+    List<Color> colors;
 
     Vector3Int checkingBlockPosition;
     Vector3Int currentBlockPosition;
@@ -25,12 +25,15 @@ public class ChunkMeshGenerator
         _chunkGenerationSetting = chunkGenerationSetting;
     }
 
-    public Mesh CreateMesh(ChunkData chunkData, GameObject chunk)
+    public Mesh CreateMesh(ChunkData chunkData)
     {
         mesh = new Mesh();
+        vertices = new List<Vector3>();
+        triangles = new List<int>();
+        colors = new List<Color>();
         var startingX = ChunkCoorToRealCoor.GetRealCoor(chunkData.Coordinates.x, _chunkGenerationSetting.chunkSize.x);
         var startingZ = ChunkCoorToRealCoor.GetRealCoor(chunkData.Coordinates.y, _chunkGenerationSetting.chunkSize.z);
-        meshRenderer = chunk.GetComponent<MeshRenderer>();
+        meshRenderer = chunkData.GameObject.GetComponent<MeshRenderer>();
         meshRenderer.material = _chunkGenerationSetting.material;
         tris = 0; 
         for (int x = startingX; x< _chunkGenerationSetting.chunkSize.x+ startingX; x++)
@@ -79,10 +82,11 @@ public class ChunkMeshGenerator
             }
         }
         var arrVertices = vertices.ToArray();
+        //mesh.Clear();
         mesh.SetVertices(arrVertices);
-        mesh.SetTriangles(triangles,0);
+        mesh.SetIndices(triangles, MeshTopology.Triangles, 0);
+        mesh.SetColors(colors.ToArray());
 
-        mesh.colors = colors.ToArray();
         mesh.RecalculateBounds();
         mesh.RecalculateTangents();
         mesh.RecalculateNormals();

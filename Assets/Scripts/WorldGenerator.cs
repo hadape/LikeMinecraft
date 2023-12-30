@@ -1,4 +1,6 @@
 using Assets.Scripts.Classes;
+using Assets.Scripts.Events;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,33 +17,43 @@ public class WorldGenerator : MonoBehaviour
 
     List<ChunkData> _activeChunks = new List<ChunkData>();
 
+    [SerializeField]
+    private GameObject _player;
+    private BlockManipulator _blockManipulator;
+
     // Start is called before the first frame update
     void Start()
     {
         _chunkMeshGenerator = new ChunkMeshGenerator(_chungGenerationSetting);
         _chunkGenerator = new ChunkGenerator(_chungGenerationSetting);
-        for (int x = -_chungGenerationSetting.viewDistance; x <=  _chungGenerationSetting.viewDistance; x++)
-        {
-            for (int z =  -_chungGenerationSetting.viewDistance;z <= _chungGenerationSetting.viewDistance; z++)
-            {
-                CreateChunk(x,z);
-            }
-        }
+        _blockManipulator = _player.GetComponent<BlockManipulator>();
+        CreateChunk(0, 0);
+        //for (int x = -_chungGenerationSetting.viewDistance; x <=  _chungGenerationSetting.viewDistance; x++)
+        //{
+        //    for (int z =  -_chungGenerationSetting.viewDistance;z <= _chungGenerationSetting.viewDistance; z++)
+        //    {
+        //        CreateChunk(x,z);
+        //    }
+        //}
+        SubscribeToEvents();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void SubscribeToEvents()
     {
-        
+        _blockManipulator.OnBlockPickUp += OnBlockPickup;
     }
 
-    public void OnBlockPickup(Vector3 blockCoord)
+    private void OnBlockPickup(object sender, OnBlockPickupEventArgs e)
     {
-        Debug.Log($"block pickuped: {blockCoord.x},{blockCoord.y},{blockCoord.z}");
-        var blockCoords = new Vector3Int(Mathf.RoundToInt(blockCoord.x), Mathf.RoundToInt(blockCoord.y), Mathf.RoundToInt(blockCoord.z));
+
+        Debug.Log($"block pickuped: {e.BlockPosition.x},{e.BlockPosition.y},{e.BlockPosition.z}");
+        var blockCoords = new Vector3Int(Mathf.RoundToInt(e.BlockPosition.x), Mathf.RoundToInt(e.BlockPosition.y), Mathf.RoundToInt(e.BlockPosition.z));
         var blocksChunk = GetChunkCoordsFromPosition(blockCoords);
         ChangeBlockTypeToAirInChunk(blockCoords, blocksChunk);
     }
+
+
+
     private void ChangeBlockTypeToAirInChunk(Vector3Int blockCoord, Vector2Int chunkCoords)
     {
         var chunk = _activeChunks.Where(x=>x.Coordinates == chunkCoords).FirstOrDefault();
@@ -62,7 +74,9 @@ public class WorldGenerator : MonoBehaviour
         { typeof(MeshRenderer), typeof(MeshFilter), typeof(MeshCollider) });
         tempChunk.layer = groundLevel;
 
-        var mesh = new ChunkMeshGenerator(_chungGenerationSetting).CreateMesh(chunkData, tempChunk);
+        chunkData.GameObject = tempChunk;
+
+        var mesh = new ChunkMeshGenerator(_chungGenerationSetting).CreateMesh(chunkData);
 
 
         tempChunk.GetComponent<MeshFilter>().mesh = mesh;
@@ -74,10 +88,16 @@ public class WorldGenerator : MonoBehaviour
     {
         var chunkCoord = new Vector2Int(chunkX, chunkZ);
         var chunk = _activeChunks.Where(x=>x.Coordinates == chunkCoord).FirstOrDefault();
+
         if (chunk != null)
         {
-            
+            var newMesh = _chunkMeshGenerator.CreateMesh(chunk);
+            chunk.GameObject.GetComponent<MeshFilter>().mesh = newMesh;
+            chunk.GameObject.GetComponent<MeshCollider>().sharedMesh = newMesh;
+
+            chunk.GameObject.GetComponent<MeshFilter>().sharedMesh = newMesh;
         }
+
 
     }
 
