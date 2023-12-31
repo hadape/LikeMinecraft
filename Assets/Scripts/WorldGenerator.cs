@@ -16,7 +16,7 @@ public class WorldGenerator : MonoBehaviour
 
 
     private ChunkGenerator _chunkGenerator;
-    private ChunkMeshGenerator _chunkMeshGenerator;
+
 
     List<ChunkData> _activeChunks = new List<ChunkData>();
 
@@ -29,7 +29,7 @@ public class WorldGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _chunkMeshGenerator = new ChunkMeshGenerator(_chungGenerationSetting, _mainThreadActions);
+
         _chunkGenerator = new ChunkGenerator(_chungGenerationSetting);
         _blockManipulator = _player.GetComponent<BlockManipulator>();
 
@@ -80,11 +80,21 @@ public class WorldGenerator : MonoBehaviour
     private void ChangeBlockType(Vector3Int blockCoord, Vector2Int chunkCoords,Enums.BlockType blockType)
     {
         var chunk = _activeChunks.Where(x=>x.Coordinates == chunkCoords).FirstOrDefault();
-        if (chunk != null)
+
+        if (chunk != null && CheckWorldBound(blockCoord.y, chunk.Data[blockCoord]))
         {
             chunk.Data[blockCoord] = blockType;
+            UpdateChunkAsync(chunk.Coordinates.x, chunk.Coordinates.y);
         }
-        UpdateChunkAsync(chunk.Coordinates.x, chunk.Coordinates.y);
+        
+    }
+    private bool CheckWorldBound(int blockY, Enums.BlockType blockType)
+    {
+        var result = true;
+        if (blockY > _chungGenerationSetting.chunkSize.y) result = false;
+        if(blockType == Enums.BlockType.Bedrock) result = false;
+
+        return result;
     }
 
     private async void CreateChunkAsync(int x,int z)
@@ -102,23 +112,6 @@ public class WorldGenerator : MonoBehaviour
         await Task.Run(() => new ChunkMeshGenerator(_chungGenerationSetting,_mainThreadActions).CalculateMeshData(chunkData));
 
         _activeChunks.Add(chunkData);
-    }
-
-    private void UpdateChunk(int chunkX, int chunkZ)
-    {
-        var chunkCoord = new Vector2Int(chunkX, chunkZ);
-        var chunk = _activeChunks.Where(x=>x.Coordinates == chunkCoord).FirstOrDefault();
-
-        if (chunk != null)
-        {
-            var newMesh = _chunkMeshGenerator.CreateMesh(chunk);
-            chunk.GameObject.GetComponent<MeshFilter>().mesh = newMesh;
-            chunk.GameObject.GetComponent<MeshCollider>().sharedMesh = newMesh;
-
-            chunk.GameObject.GetComponent<MeshFilter>().sharedMesh = newMesh;
-        }
-
-
     }
 
     private async void UpdateChunkAsync(int chunkX, int chunkZ)

@@ -512,7 +512,7 @@ MonoBehaviour:
     chunkSize: {x: 16, y: 256, z: 16}
     noiseScale: {x: 1, y: 1}
     noiseOffset: {x: 0, y: 0}
-    heightOffset: 60
+    heightOffset: 10
     heightIntensity: 5
     material: {fileID: 2100000, guid: 7f844743bfd5a3e4f9c9de7d85d6ae17, type: 2}
     viewDistance: 1
