@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class ChunkGenerator 
 {
-
+    int _randomSeed;
     ChunkGenerationSetting _setting;
     public ChunkGenerator(ChunkGenerationSetting setting)
     {
         _setting = setting;
+        _randomSeed = Random.Range(0, 10000);
     }
 
     public ChunkData GetChunkData(int chunkX, int chunkZ)
@@ -54,8 +55,8 @@ public class ChunkGenerator
 
     private int GetHeighFromPerlinNoise(int x, int z)
     {
-        float perlinCoordsX = _setting.noiseOffset.x + x / (float)_setting.chunkSize.x * _setting.noiseScale.x;
-        float perlinCoordY = _setting.noiseOffset.y + z / (float)_setting.chunkSize.z * _setting.noiseScale.y;
+        float perlinCoordsX = _setting.noiseOffset.x + _randomSeed + x / (float)_setting.chunkSize.x * _setting.noiseScale.x;
+        float perlinCoordY = _setting.noiseOffset.y + +_randomSeed + z / (float)_setting.chunkSize.z * _setting.noiseScale.y;
 
         return Mathf.RoundToInt(Mathf.PerlinNoise(perlinCoordsX, perlinCoordY) * _setting.heightIntensity + _setting.heightOffset);
     }
