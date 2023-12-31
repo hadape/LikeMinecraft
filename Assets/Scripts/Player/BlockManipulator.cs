@@ -18,11 +18,12 @@ public class BlockManipulator : MonoBehaviour
 
     void Update()
     {
+        Debug.DrawRay(PlayerCamera.position, PlayerCamera.forward * maxDistance, Color.red);
         if (Input.GetMouseButtonDown(0))
         {
            
 
-            Ray ray = new Ray(transform.position, transform.forward);
+            Ray ray = new Ray(PlayerCamera.position, PlayerCamera.forward);
 
             if (Physics.Raycast(ray, out RaycastHit hitInfo, maxDistance, ChunkInteractMask))
             {
