@@ -2,9 +2,12 @@ using Assets.Scripts.Classes;
 using Assets.Scripts.Events;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class WorldGenerator : MonoBehaviour
 {
@@ -21,21 +24,33 @@ public class WorldGenerator : MonoBehaviour
     private GameObject _player;
     private BlockManipulator _blockManipulator;
 
+    private ConcurrentQueue<Action> _mainThreadActions = new ConcurrentQueue<Action>();
+
     // Start is called before the first frame update
     void Start()
     {
-        _chunkMeshGenerator = new ChunkMeshGenerator(_chungGenerationSetting);
+        _chunkMeshGenerator = new ChunkMeshGenerator(_chungGenerationSetting, _mainThreadActions);
         _chunkGenerator = new ChunkGenerator(_chungGenerationSetting);
         _blockManipulator = _player.GetComponent<BlockManipulator>();
-        CreateChunk(0, 0);
-        //for (int x = -_chungGenerationSetting.viewDistance; x <=  _chungGenerationSetting.viewDistance; x++)
-        //{
-        //    for (int z =  -_chungGenerationSetting.viewDistance;z <= _chungGenerationSetting.viewDistance; z++)
-        //    {
-        //        CreateChunk(x,z);
-        //    }
-        //}
+
+        for (int x = -_chungGenerationSetting.viewDistance; x <= _chungGenerationSetting.viewDistance; x++)
+        {
+            for (int z = -_chungGenerationSetting.viewDistance; z <= _chungGenerationSetting.viewDistance; z++)
+            {
+                CreateChunkAsync(x, z);
+                //task.Start();
+                
+            }
+        }
         SubscribeToEvents();
+    }
+
+    void Update()
+    {
+        while (_mainThreadActions.TryDequeue(out var action))
+        {
+            action.Invoke();
+        }
     }
 
     private void SubscribeToEvents()
@@ -69,10 +84,10 @@ public class WorldGenerator : MonoBehaviour
         {
             chunk.Data[blockCoord] = blockType;
         }
-        UpdateChunk(chunk.Coordinates.x, chunk.Coordinates.y);
+        UpdateChunkAsync(chunk.Coordinates.x, chunk.Coordinates.y);
     }
 
-    private void CreateChunk(int x,int z)
+    private async void CreateChunkAsync(int x,int z)
     {
        
         var chunkData = _chunkGenerator.GetChunkData(x,z);
@@ -84,11 +99,8 @@ public class WorldGenerator : MonoBehaviour
 
         chunkData.GameObject = tempChunk;
 
-        var mesh = new ChunkMeshGenerator(_chungGenerationSetting).CreateMesh(chunkData);
+        await Task.Run(() => new ChunkMeshGenerator(_chungGenerationSetting,_mainThreadActions).CalculateMeshData(chunkData));
 
-
-        tempChunk.GetComponent<MeshFilter>().mesh = mesh;
-        tempChunk.GetComponent<MeshCollider>().sharedMesh = mesh;
         _activeChunks.Add(chunkData);
     }
 
@@ -107,6 +119,20 @@ public class WorldGenerator : MonoBehaviour
         }
 
 
+    }
+
+    private async void UpdateChunkAsync(int chunkX, int chunkZ)
+    {
+        var chunkCoord = new Vector2Int(chunkX, chunkZ);
+        var chunk = _activeChunks.Where(x => x.Coordinates == chunkCoord).FirstOrDefault();
+
+        if (chunk != null)
+        {
+
+            await Task.Run(() => new ChunkMeshGenerator(_chungGenerationSetting, _mainThreadActions).CalculateMeshData(chunk));
+
+           
+        }
     }
 
     public Vector2Int GetChunkCoordsFromPosition(Vector3 WorldPosition)
