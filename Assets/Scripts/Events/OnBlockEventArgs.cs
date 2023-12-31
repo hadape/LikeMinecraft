@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Events
 {
-    public class OnBlockPickupEventArgs : EventArgs
+    public class OnBlockEventArgs : EventArgs
     {
         public Vector3Int BlockPosition;
     }

@@ -41,25 +41,33 @@ public class WorldGenerator : MonoBehaviour
     private void SubscribeToEvents()
     {
         _blockManipulator.OnBlockPickUp += OnBlockPickup;
+        _blockManipulator.OnBlockPlaced += OnBlockPlaced;
     }
 
-    private void OnBlockPickup(object sender, OnBlockPickupEventArgs e)
+    private void OnBlockPlaced(object sender, OnBlockEventArgs e)
+    {
+        var blockCoords = new Vector3Int(Mathf.RoundToInt(e.BlockPosition.x), Mathf.RoundToInt(e.BlockPosition.y), Mathf.RoundToInt(e.BlockPosition.z));
+        var blocksChunk = GetChunkCoordsFromPosition(blockCoords);
+        ChangeBlockType(blockCoords, blocksChunk, Enums.BlockType.Dirt);
+    }
+
+    private void OnBlockPickup(object sender, OnBlockEventArgs e)
     {
 
         Debug.Log($"block pickuped: {e.BlockPosition.x},{e.BlockPosition.y},{e.BlockPosition.z}");
         var blockCoords = new Vector3Int(Mathf.RoundToInt(e.BlockPosition.x), Mathf.RoundToInt(e.BlockPosition.y), Mathf.RoundToInt(e.BlockPosition.z));
         var blocksChunk = GetChunkCoordsFromPosition(blockCoords);
-        ChangeBlockTypeToAirInChunk(blockCoords, blocksChunk);
+        ChangeBlockType(blockCoords, blocksChunk, Enums.BlockType.Air);
     }
 
 
 
-    private void ChangeBlockTypeToAirInChunk(Vector3Int blockCoord, Vector2Int chunkCoords)
+    private void ChangeBlockType(Vector3Int blockCoord, Vector2Int chunkCoords,Enums.BlockType blockType)
     {
         var chunk = _activeChunks.Where(x=>x.Coordinates == chunkCoords).FirstOrDefault();
         if (chunk != null)
         {
-            chunk.Data[blockCoord] = Enums.BlockType.Air;
+            chunk.Data[blockCoord] = blockType;
         }
         UpdateChunk(chunk.Coordinates.x, chunk.Coordinates.y);
     }
