@@ -13,6 +13,8 @@ public class BlockManipulator : MonoBehaviour
     [SerializeField] 
     private LayerMask ChunkInteractMask;
     [SerializeField]
+    private LayerMask BoundCheckMask;
+    [SerializeField]
     private float maxDistance = 8f;
     bool isMining = false;
 
@@ -153,13 +155,14 @@ public class BlockManipulator : MonoBehaviour
                     z = Mathf.RoundToInt(targetPoint.z)
                 };
 
+                if (Physics.CheckBox(targetBlock, Vector3.one * .5f, Quaternion.identity, BoundCheckMask) == false)
+                {
+                    OnBlockPlaced?.Invoke(this, new OnBlockEventArgs { BlockPosition = targetBlock });
+                }
 
-                OnBlockPlaced?.Invoke(this, new OnBlockEventArgs { BlockPosition = targetBlock });
+                   
             }
-            else
-            {
-                //Debug.Log("No block hit");
-            }
+           
         }
     }
 }
