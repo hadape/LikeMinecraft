@@ -27,6 +27,7 @@ public class WorldGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         _world = GetComponent<World>();
         _world.SetGhunkSetting(_chungGenerationSetting);
         _chunkGenerator = new ChunkGenerator(_chungGenerationSetting);
@@ -40,14 +41,18 @@ public class WorldGenerator : MonoBehaviour
         SubscribeToEvents();
     }
 
+
     void Update()
     {
+       
         while (_mainThreadActions.TryDequeue(out var action))
         {
             action.Invoke();
         }
         GenerateChunkBasedOnPlayer();
     }
+
+
 
     private void GenerateChunkBasedOnPlayer()
     {

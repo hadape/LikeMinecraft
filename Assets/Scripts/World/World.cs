@@ -3,12 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class World : MonoBehaviour
 {
     public List<ChunkData> ActiveChunks { get; private set; } = new List<ChunkData>();
     private CoordinatesUtil _coordinatesUtil;
     private ChunkGenerationSetting _generationSetting;
+    [SerializeField]
+    private GameObject _player;
+    [SerializeField]
+    Camera _initCamera;
+    [SerializeField]
+    Camera _mainCamera;
+    [SerializeField]
+    GameObject _loadingScreen;
+
+    private void Start()
+    {
+        _player.SetActive(false);
+    }
+    private void Update()
+    {
+        SpawnPlayer();
+    }
 
     public Enums.BlockType GetTypeOfBlock(Vector3Int blockCoord)
     {
@@ -45,4 +63,14 @@ public class World : MonoBehaviour
         }
     }
 
+    private void SpawnPlayer()
+    {
+        int oneRowGenerated = _generationSetting.viewDistance + (_generationSetting.viewDistance + 1);
+        if (_player.activeSelf == false && ActiveChunks.Count() == oneRowGenerated * oneRowGenerated)
+        {
+            _player.SetActive(true);
+            _initCamera.gameObject.SetActive(false);
+            _loadingScreen.SetActive(false);
+        }
+    }
 }
