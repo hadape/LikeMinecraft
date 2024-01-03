@@ -2,6 +2,7 @@ using Assets.Scripts.Classes;
 using Assets.Scripts.Events;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -18,6 +19,8 @@ public class WorldGenerator : MonoBehaviour
     private GameObject _player;
     private BlockManipulator _blockManipulator;
     private World _world;
+    private Vector2Int? _currentPlayersChunk = null;
+
 
     private ConcurrentQueue<Action> _mainThreadActions = new ConcurrentQueue<Action>();
 
@@ -30,13 +33,10 @@ public class WorldGenerator : MonoBehaviour
         _blockManipulator = _player.GetComponent<BlockManipulator>();
         _coordinatesUtil = new CoordinatesUtil(_chungGenerationSetting);
 
-        for (int x = -_chungGenerationSetting.viewDistance; x <= _chungGenerationSetting.viewDistance; x++)
-        {
-            for (int z = -_chungGenerationSetting.viewDistance; z <= _chungGenerationSetting.viewDistance; z++)
-            {
-                CreateChunkAsync(x, z);
-            }
-        }
+       // _currentPlayersChunk = _coordinatesUtil.GetChunkCoordsFromPosition(_player.transform.position);
+
+        //GenerateChunks();
+
         SubscribeToEvents();
     }
 
@@ -45,6 +45,50 @@ public class WorldGenerator : MonoBehaviour
         while (_mainThreadActions.TryDequeue(out var action))
         {
             action.Invoke();
+        }
+        GenerateChunkBasedOnPlayer();
+    }
+
+    private void GenerateChunkBasedOnPlayer()
+    {
+        var playersChunk = _coordinatesUtil.GetChunkCoordsFromPosition(_player.transform.position);
+        if(_currentPlayersChunk == null || playersChunk != _currentPlayersChunk )
+        {
+            _currentPlayersChunk = playersChunk;
+
+            GenerateChunks();
+        }
+    }
+
+    private void GenerateChunks()
+    {
+        var chunksToRemove = new List<ChunkData>();
+        foreach (var chunk in _world.ActiveChunks)
+        {
+            chunksToRemove.Add(chunk);
+        }
+        for (int x = _currentPlayersChunk.Value.x -_chungGenerationSetting.viewDistance; x <= _currentPlayersChunk.Value.x +_chungGenerationSetting.viewDistance; x++)
+        {
+            for (int z = _currentPlayersChunk.Value.y - _chungGenerationSetting.viewDistance; z <= _currentPlayersChunk.Value.y + _chungGenerationSetting.viewDistance; z++)
+            {
+                var chunk = _world.ActiveChunks.Where(ch => ch.Coordinates == new Vector2Int(x, z)).FirstOrDefault();
+                if(chunk == null)
+                {
+                    CreateChunkAsync(x, z);
+                }
+                else
+                {
+                    chunksToRemove.Remove(chunk);
+                }
+               
+            }
+        }
+
+        for (int i = chunksToRemove.Count - 1; i >= 0; i--)
+        {
+            var chunkToDestroy = chunksToRemove[i];
+            _world.RemoveChunkFromActive(chunkToDestroy);
+            Destroy(chunkToDestroy.GameObject);
         }
     }
 

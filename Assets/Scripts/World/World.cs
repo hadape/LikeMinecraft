@@ -29,13 +29,7 @@ public class World : MonoBehaviour
         ActiveChunks.Add(chunk);
     }
     public void RemoveChunkFromActive(ChunkData chunk) {  ActiveChunks.Remove(chunk); }
-    public void RemoveChunksFromActive(List<ChunkData> chunks)
-    {
-        foreach (var chunk in ActiveChunks)
-        {
-            RemoveChunkFromActive(chunk);
-        }
-    }
+
 
     public Vector2Int GetChunkCoordByBlock(Vector3Int blockCoord)
     {
