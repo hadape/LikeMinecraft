@@ -167,8 +167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60d144d8b87753d46b9882ec4084dc73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uiCanvas: {fileID: 2029954755}
-  _player: {fileID: 155028032}
 --- !u!1001 &72061627
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -915,7 +913,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62512a3ba19f5694e9001ce29c4862cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseMenuUI: {fileID: 1520146830}
+  _pauseMenuUI: {fileID: 1520146830}
+  _gameUI: {fileID: 2029954752}
 --- !u!20 &634630772 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 7541797421323646187, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
@@ -2922,6 +2921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f836eb0363b2099478374a35f2e57300, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _inventoryObject: {fileID: 64725768}
   _blockUIList:
   - BlockType: 1
     TextComponent: {fileID: 1453168780}
