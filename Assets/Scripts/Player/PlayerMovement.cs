@@ -40,5 +40,7 @@ public class PlayerMovement : MonoBehaviour
 
         _velocity.y += _movementSettings.Gravity * Time.deltaTime;
         _controller.Move(_velocity * Time.deltaTime);
+
+        //TODO: add respawn mechanick for returning to active block if player fall of the map
     }
 }

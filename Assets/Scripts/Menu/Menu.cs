@@ -52,4 +52,9 @@ public class Menu : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void RespawnPlayer()
+    {
+        //TODO: event for placing player to active chunk
+    }
 }
