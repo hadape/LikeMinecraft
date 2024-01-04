@@ -2082,7 +2082,6 @@ GameObject:
   - component: {fileID: 1429775529}
   - component: {fileID: 1429775528}
   - component: {fileID: 1429775530}
-  - component: {fileID: 1429775531}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -2144,99 +2143,6 @@ MonoBehaviour:
   _mainCamera: {fileID: 634630772}
   _loadingScreen: {fileID: 1724401397}
   _gameUI: {fileID: 2029954752}
---- !u!114 &1429775531
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1429775527}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e2040cfebf08dd469098e465562c58d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CubeTextures:
-  - TextureType: 1
-    XTexture: {fileID: 21300000, guid: eaf525fc9543c7b4c8ae25c58c5cabb4, type: 3}
-    YTexture: {fileID: 21300000, guid: eaf525fc9543c7b4c8ae25c58c5cabb4, type: 3}
-    ZTexture: {fileID: 21300000, guid: 0c7f821b31c0b9f4d8f42212cacdcc55, type: 3}
-    XTextureT: []
-    YTextureT: []
-    ZTextureT: []
-    SpecificFaceTextures:
-      Up: {fileID: 21300000, guid: 0c7f821b31c0b9f4d8f42212cacdcc55, type: 3}
-      Down: {fileID: 21300000, guid: 16881ce69cf578840b1b78c0c7292e67, type: 3}
-      Left: {fileID: 21300000, guid: eaf525fc9543c7b4c8ae25c58c5cabb4, type: 3}
-      Right: {fileID: 21300000, guid: eaf525fc9543c7b4c8ae25c58c5cabb4, type: 3}
-      Forward: {fileID: 0}
-      Back: {fileID: 0}
-      UpT: []
-      DownT: []
-      LeftT: []
-      RightT: []
-      ForwardT: []
-      BackT: []
-  - TextureType: 2
-    XTexture: {fileID: 21300000, guid: 16881ce69cf578840b1b78c0c7292e67, type: 3}
-    YTexture: {fileID: 21300000, guid: 16881ce69cf578840b1b78c0c7292e67, type: 3}
-    ZTexture: {fileID: 21300000, guid: 16881ce69cf578840b1b78c0c7292e67, type: 3}
-    XTextureT: []
-    YTextureT: []
-    ZTextureT: []
-    SpecificFaceTextures:
-      Up: {fileID: 21300000, guid: 16881ce69cf578840b1b78c0c7292e67, type: 3}
-      Down: {fileID: 21300000, guid: 16881ce69cf578840b1b78c0c7292e67, type: 3}
-      Left: {fileID: 21300000, guid: 16881ce69cf578840b1b78c0c7292e67, type: 3}
-      Right: {fileID: 21300000, guid: 16881ce69cf578840b1b78c0c7292e67, type: 3}
-      Forward: {fileID: 21300000, guid: 16881ce69cf578840b1b78c0c7292e67, type: 3}
-      Back: {fileID: 21300000, guid: 16881ce69cf578840b1b78c0c7292e67, type: 3}
-      UpT: []
-      DownT: []
-      LeftT: []
-      RightT: []
-      ForwardT: []
-      BackT: []
-  - TextureType: 3
-    XTexture: {fileID: 21300000, guid: 3c0c26ce0b89b54499bde1e5eb65bbaf, type: 3}
-    YTexture: {fileID: 21300000, guid: 3c0c26ce0b89b54499bde1e5eb65bbaf, type: 3}
-    ZTexture: {fileID: 21300000, guid: 3c0c26ce0b89b54499bde1e5eb65bbaf, type: 3}
-    XTextureT: []
-    YTextureT: []
-    ZTextureT: []
-    SpecificFaceTextures:
-      Up: {fileID: 21300000, guid: 3c0c26ce0b89b54499bde1e5eb65bbaf, type: 3}
-      Down: {fileID: 21300000, guid: 3c0c26ce0b89b54499bde1e5eb65bbaf, type: 3}
-      Left: {fileID: 21300000, guid: 3c0c26ce0b89b54499bde1e5eb65bbaf, type: 3}
-      Right: {fileID: 21300000, guid: 3c0c26ce0b89b54499bde1e5eb65bbaf, type: 3}
-      Forward: {fileID: 21300000, guid: 3c0c26ce0b89b54499bde1e5eb65bbaf, type: 3}
-      Back: {fileID: 0}
-      UpT: []
-      DownT: []
-      LeftT: []
-      RightT: []
-      ForwardT: []
-      BackT: []
-  - TextureType: 4
-    XTexture: {fileID: 21300000, guid: 624870781cf03424892d3c71301ce53a, type: 3}
-    YTexture: {fileID: 21300000, guid: 624870781cf03424892d3c71301ce53a, type: 3}
-    ZTexture: {fileID: 21300000, guid: 624870781cf03424892d3c71301ce53a, type: 3}
-    XTextureT: []
-    YTextureT: []
-    ZTextureT: []
-    SpecificFaceTextures:
-      Up: {fileID: 21300000, guid: 624870781cf03424892d3c71301ce53a, type: 3}
-      Down: {fileID: 21300000, guid: 624870781cf03424892d3c71301ce53a, type: 3}
-      Left: {fileID: 21300000, guid: 624870781cf03424892d3c71301ce53a, type: 3}
-      Right: {fileID: 0}
-      Forward: {fileID: 0}
-      Back: {fileID: 0}
-      UpT: []
-      DownT: []
-      LeftT: []
-      RightT: []
-      ForwardT: []
-      BackT: []
 --- !u!1 &1453168778
 GameObject:
   m_ObjectHideFlags: 0
@@ -2382,7 +2288,6 @@ GameObject:
   - component: {fileID: 1518307134}
   - component: {fileID: 1518307136}
   - component: {fileID: 1518307135}
-  - component: {fileID: 1518307137}
   m_Layer: 5
   m_Name: Grass_img
   m_TagString: Untagged
@@ -2447,21 +2352,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1518307133}
   m_CullTransparentMesh: 1
---- !u!114 &1518307137
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1518307133}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
-  m_EffectDistance: {x: 2, y: 2}
-  m_UseGraphicAlpha: 0
 --- !u!1 &1520146830
 GameObject:
   m_ObjectHideFlags: 0
