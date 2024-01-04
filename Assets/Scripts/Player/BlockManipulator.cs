@@ -26,6 +26,9 @@ public class BlockManipulator : MonoBehaviour
     [SerializeField]
     private float currentBlockHealth;
     private Enums.BlockType currentBlockType;
+    [SerializeField]
+    private GameObject _invetoryObject;
+    private Inventory _invetory;
 
     public event EventHandler<OnBlockEventArgs> OnBlockPickUp;
     public event EventHandler<OnBlockEventArgs> OnBlockPlaced;
@@ -33,6 +36,7 @@ public class BlockManipulator : MonoBehaviour
     private void Start()
     {
         _world = _worldObject.GetComponent<World>();
+        _invetory = _invetoryObject.GetComponent<Inventory>();
     }
 
     void Update()
@@ -69,7 +73,8 @@ public class BlockManipulator : MonoBehaviour
             currentBlockHealth -= Time.deltaTime; // Snížení HP v èase
             if (currentBlockHealth <= 0)
             {
-                OnBlockPickUp?.Invoke(this, new OnBlockEventArgs { BlockPosition = currentTargetBlock });
+
+                OnBlockPickUp?.Invoke(this, new OnBlockEventArgs { BlockPosition = currentTargetBlock, BlockType = currentBlockType });
 
                 ResetMining();
             }
@@ -105,63 +110,39 @@ public class BlockManipulator : MonoBehaviour
 
 
 
-    private void PickupBlock()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-
-
-            Ray ray = new Ray(PlayerCamera.position, PlayerCamera.forward);
-
-            if (Physics.Raycast(ray, out RaycastHit hitInfo, maxDistance, ChunkInteractMask))
-            {
-                Debug.Log("Block hit");
-                Vector3 targetPoint = hitInfo.point - hitInfo.normal * .1f;
-
-                Vector3Int targetBlock = new Vector3Int
-                {
-                    x = Mathf.RoundToInt(targetPoint.x),
-                    y = Mathf.RoundToInt(targetPoint.y),
-                    z = Mathf.RoundToInt(targetPoint.z)
-                };
-
-
-                OnBlockPickUp?.Invoke(this, new OnBlockEventArgs { BlockPosition = targetBlock });
-            }
-            else
-            {
-                Debug.Log("No block hit");
-            }
-        }
-    }
+  
 
     private void PlaceBlock()
     {
+       
         if (Input.GetMouseButtonDown(1))
         {
-
-
-            Ray ray = new Ray(PlayerCamera.position, PlayerCamera.forward);
-
-            if (Physics.Raycast(ray, out RaycastHit hitInfo, maxDistance, ChunkInteractMask))
+            var blockType = _invetory.ActiveType;
+            if (_invetory.PlayerInventory[blockType] > 0)
             {
-                Debug.Log("Placing block");
-                Vector3 targetPoint = hitInfo.point + hitInfo.normal * .1f;
+                Ray ray = new Ray(PlayerCamera.position, PlayerCamera.forward);
 
-                Vector3Int targetBlock = new Vector3Int
+                if (Physics.Raycast(ray, out RaycastHit hitInfo, maxDistance, ChunkInteractMask))
                 {
-                    x = Mathf.RoundToInt(targetPoint.x),
-                    y = Mathf.RoundToInt(targetPoint.y),
-                    z = Mathf.RoundToInt(targetPoint.z)
-                };
+                    Debug.Log("Placing block");
+                    Vector3 targetPoint = hitInfo.point + hitInfo.normal * .1f;
 
-                if (Physics.CheckBox(targetBlock, Vector3.one * .5f, Quaternion.identity, BoundCheckMask) == false)
-                {
-                    OnBlockPlaced?.Invoke(this, new OnBlockEventArgs { BlockPosition = targetBlock });
+                    Vector3Int targetBlock = new Vector3Int
+                    {
+                        x = Mathf.RoundToInt(targetPoint.x),
+                        y = Mathf.RoundToInt(targetPoint.y),
+                        z = Mathf.RoundToInt(targetPoint.z)
+                    };
+
+                    if (Physics.CheckBox(targetBlock, Vector3.one * .5f, Quaternion.identity, BoundCheckMask) == false)
+                    {
+                        OnBlockPlaced?.Invoke(this, new OnBlockEventArgs { BlockPosition = targetBlock, BlockType = blockType });
+                    }
+
+
                 }
-
-                   
             }
+
            
         }
     }

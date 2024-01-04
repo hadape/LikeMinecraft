@@ -27,16 +27,11 @@ public class WorldGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         _world = GetComponent<World>();
         _world.SetGhunkSetting(_chungGenerationSetting);
         _chunkGenerator = new ChunkGenerator(_chungGenerationSetting);
         _blockManipulator = _player.GetComponent<BlockManipulator>();
         _coordinatesUtil = new CoordinatesUtil(_chungGenerationSetting);
-
-       // _currentPlayersChunk = _coordinatesUtil.GetChunkCoordsFromPosition(_player.transform.position);
-
-        //GenerateChunks();
 
         SubscribeToEvents();
     }
@@ -107,7 +102,7 @@ public class WorldGenerator : MonoBehaviour
     {
         var blockCoords = new Vector3Int(Mathf.RoundToInt(e.BlockPosition.x), Mathf.RoundToInt(e.BlockPosition.y), Mathf.RoundToInt(e.BlockPosition.z));
         var blocksChunk = _coordinatesUtil.GetChunkCoordsFromPosition(blockCoords);
-        ChangeBlockType(blockCoords, blocksChunk, Enums.BlockType.Dirt);
+        ChangeBlockType(blockCoords, blocksChunk, e.BlockType);
     }
 
     private void OnBlockPickup(object sender, OnBlockEventArgs e)

@@ -17,10 +17,14 @@ public class World : MonoBehaviour
     Camera _mainCamera;
     [SerializeField]
     GameObject _loadingScreen;
+    [SerializeField]
+    GameObject _gameUI;
 
     private void Start()
     {
         _player.SetActive(false);
+        _loadingScreen.SetActive(true);
+        _gameUI.SetActive(false);
     }
     private void Update()
     {
@@ -70,6 +74,7 @@ public class World : MonoBehaviour
             _player.SetActive(true);
             _initCamera.gameObject.SetActive(false);
             _loadingScreen.SetActive(false);
+            _gameUI.SetActive(true);
         }
     }
 }

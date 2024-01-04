@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace Assets.Scripts.Events
     public class OnBlockEventArgs : EventArgs
     {
         public Vector3Int BlockPosition;
+        public Enums.BlockType BlockType;
     }
     
 }
