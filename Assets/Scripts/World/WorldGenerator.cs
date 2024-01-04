@@ -84,11 +84,13 @@ public class WorldGenerator : MonoBehaviour
             var chunkToDestroy = chunksToRemove[i];
             _world.RemoveChunkFromActive(chunkToDestroy);
             Destroy(chunkToDestroy.GameObject);
+            //TODO: save data of destroy chunks, so players block manipulation will be preserved
         }
     }
 
     private void SubscribeToEvents()
     {
+        //TODO: create event manager and try more decoupling objects
         _blockManipulator.OnBlockPickUp += OnBlockPickup;
         _blockManipulator.OnBlockPlaced += OnBlockPlaced;
     }
@@ -114,6 +116,8 @@ public class WorldGenerator : MonoBehaviour
         if (chunk != null && CheckWorldBound(blockCoord.y, chunk.Data[blockCoord]))
         {
             chunk.Data[blockCoord] = blockType;
+
+            //TODO: have separate queu for chunks where block are manipulated, change them before generation new chunks
             UpdateChunkAsync(chunk.Coordinates.x, chunk.Coordinates.y);
         }
     }
@@ -128,7 +132,7 @@ public class WorldGenerator : MonoBehaviour
 
     private async void CreateChunkAsync(int x, int z)
     {
-
+        
         var chunkData = _chunkGenerator.GetChunkData(x, z);
 
         int groundLevel = LayerMask.NameToLayer(Constants.GROUND_LAYER);
@@ -138,6 +142,7 @@ public class WorldGenerator : MonoBehaviour
 
         chunkData.GameObject = tempChunk;
 
+        //TODO: optimalize generation of mesh, using task queue, or atleast throtle number of tasks
         await Task.Run(() => new ChunkMeshGenerator(_chungGenerationSetting, _mainThreadActions).CalculateMeshData(chunkData));
 
         _world.AddChunkToActive(chunkData);
