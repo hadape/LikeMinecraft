@@ -41,7 +41,13 @@ public class ChunkGenerator
                     blockType = Enums.BlockType.Air;
                     if (y <= height)
                     {
-                        if (y == height) { blockType = Enums.BlockType.Grass; }
+                        if (y == height) { 
+                            if (y == _setting.snowHeight)
+                            {
+                                blockType = Enums.BlockType.Snow;
+                            }
+                            else { blockType = Enums.BlockType.Grass; }
+                        }
                         if (y < height && y > height - 4) { blockType = Enums.BlockType.Dirt; }
                         if (y <= height - 4 && y > 0) { blockType = Enums.BlockType.Rock; }
                         if (y == 0) { blockType = Enums.BlockType.Bedrock; }

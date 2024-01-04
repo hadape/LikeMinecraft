@@ -15,7 +15,7 @@ public class PlayerMovement : MonoBehaviour
     private LayerMask _groundMask;
     
     [SerializeField]
-    private float _speed = 12f;
+    private float _speed = 5f;
     [SerializeField]
     private float gravity = -9.81f;
     [SerializeField]

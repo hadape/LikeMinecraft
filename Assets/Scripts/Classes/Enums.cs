@@ -21,7 +21,8 @@ namespace Assets.Scripts.Classes
             Grass,
             Dirt,
             Rock,
-            Bedrock
+            Bedrock,
+            Snow
         }
     }
 }

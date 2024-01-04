@@ -19,5 +19,9 @@ namespace Assets.Scripts.Classes
         public static Color[] Black = new Color[4] {
         Color.black,Color.black,Color.black,Color.black
         };
+        public static Color[] White = new Color[4]
+        {
+            Color.white,Color.white,Color.white,Color.white
+        };
     }
 }

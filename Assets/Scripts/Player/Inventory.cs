@@ -34,6 +34,7 @@ public class Inventory : MonoBehaviour
         PlayerInventory.Add(Enums.BlockType.Grass,0);
         PlayerInventory.Add(Enums.BlockType.Dirt,0);
         PlayerInventory.Add(Enums.BlockType.Rock,0);
+        PlayerInventory.Add(Enums.BlockType.Snow,0);
     }
 
     // Update is called once per frame
@@ -52,6 +53,11 @@ public class Inventory : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             ActiveType = Enums.BlockType.Rock;
+            _inventoryUI.SetActiveType(ActiveType);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            ActiveType = Enums.BlockType.Snow;
             _inventoryUI.SetActiveType(ActiveType);
         }
     }

@@ -81,6 +81,7 @@ public class ChunkMeshGenerator
             case Enums.BlockType.Dirt: colors.AddRange(MeshColor.Brown); break;
             case Enums.BlockType.Rock: colors.AddRange(MeshColor.Gray); break;
             case Enums.BlockType.Bedrock: colors.AddRange(MeshColor.Black); break;
+            case Enums.BlockType.Snow: colors.AddRange(MeshColor.White); break;
         }
     }
 

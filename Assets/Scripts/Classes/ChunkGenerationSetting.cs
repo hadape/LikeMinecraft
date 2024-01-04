@@ -12,11 +12,12 @@ namespace Assets.Scripts.Classes
     {
         
         public Vector3Int chunkSize = new Vector3Int(16, 256, 16);
-        public Vector2 noiseScale = Vector2.one;
+        public Vector2 noiseScale = new Vector2(.5f,.5f);
         public Vector2 noiseOffset = Vector2.zero;
         public int heightOffset = 60;
-        public float heightIntensity = 5;
+        public float heightIntensity = 10;
         public Material material;
         public int viewDistance = 1;
+        public int snowHeight = 70;
     }
 }
