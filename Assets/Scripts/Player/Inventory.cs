@@ -1,44 +1,41 @@
 using Assets.Scripts.Classes;
 using Assets.Scripts.Events;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
     [SerializeField]
-    Canvas uiCanvas;
-    InventoryUI _inventoryUI;
-
+    private Canvas _uiCanvas;
+    private InventoryUI _inventoryUI;
 
 
     public Dictionary<Enums.BlockType, int> PlayerInventory { get; private set; } = new Dictionary<Enums.BlockType, int>();
     public Enums.BlockType ActiveType { get; private set; } = Enums.BlockType.Grass;
 
     [SerializeField]
-    GameObject _player;
+    private GameObject _player;
 
     private BlockManipulator _blockManipulator;
-    // Start is called before the first frame update
-    void Start()
+
+    private void Start()
     {
         _blockManipulator = GetComponentInParent<BlockManipulator>();
-        _inventoryUI = uiCanvas.GetComponent<InventoryUI>();
+        _inventoryUI = _uiCanvas.GetComponent<InventoryUI>();
         InitInventory();
         SubscribeToEvents();
     }
 
     private void InitInventory()
     {
-        PlayerInventory.Add(Enums.BlockType.Grass,0);
-        PlayerInventory.Add(Enums.BlockType.Dirt,0);
-        PlayerInventory.Add(Enums.BlockType.Rock,0);
-        PlayerInventory.Add(Enums.BlockType.Snow,0);
+        PlayerInventory.Add(Enums.BlockType.Grass, 0);
+        PlayerInventory.Add(Enums.BlockType.Dirt, 0);
+        PlayerInventory.Add(Enums.BlockType.Rock, 0);
+        PlayerInventory.Add(Enums.BlockType.Snow, 0);
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -83,7 +80,7 @@ public class Inventory : MonoBehaviour
     {
         if (PlayerInventory.ContainsKey(e.BlockType))
         {
-            PlayerInventory[e.BlockType] ++;
+            PlayerInventory[e.BlockType]++;
         }
         else
         {

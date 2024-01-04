@@ -4,7 +4,7 @@ namespace Assets.Scripts.Classes
 {
     public static class MeshColor
     {
-        public static Color[] Green = new Color[4] { 
+        public static Color[] Green = new Color[4] {
         Color.green,Color.green,Color.green,Color.green
         };
 

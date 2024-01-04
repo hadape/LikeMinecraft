@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using Assets.Scripts.Classes;
 using Assets.Scripts.Events;
 using System;
@@ -21,10 +22,9 @@ public class WorldGenerator : MonoBehaviour
     private World _world;
     private Vector2Int? _currentPlayersChunk = null;
 
-
     private ConcurrentQueue<Action> _mainThreadActions = new ConcurrentQueue<Action>();
 
-    // Start is called before the first frame update
+
     void Start()
     {
         _world = GetComponent<World>();
@@ -36,10 +36,8 @@ public class WorldGenerator : MonoBehaviour
         SubscribeToEvents();
     }
 
-
     void Update()
     {
-       
         while (_mainThreadActions.TryDequeue(out var action))
         {
             action.Invoke();
@@ -47,12 +45,10 @@ public class WorldGenerator : MonoBehaviour
         GenerateChunkBasedOnPlayer();
     }
 
-
-
     private void GenerateChunkBasedOnPlayer()
     {
         var playersChunk = _coordinatesUtil.GetChunkCoordsFromPosition(_player.transform.position);
-        if(_currentPlayersChunk == null || playersChunk != _currentPlayersChunk )
+        if (_currentPlayersChunk == null || playersChunk != _currentPlayersChunk)
         {
             _currentPlayersChunk = playersChunk;
 
@@ -67,12 +63,12 @@ public class WorldGenerator : MonoBehaviour
         {
             chunksToRemove.Add(chunk);
         }
-        for (int x = _currentPlayersChunk.Value.x -_chungGenerationSetting.viewDistance; x <= _currentPlayersChunk.Value.x +_chungGenerationSetting.viewDistance; x++)
+        for (int x = _currentPlayersChunk.Value.x - _chungGenerationSetting.viewDistance; x <= _currentPlayersChunk.Value.x + _chungGenerationSetting.viewDistance; x++)
         {
             for (int z = _currentPlayersChunk.Value.y - _chungGenerationSetting.viewDistance; z <= _currentPlayersChunk.Value.y + _chungGenerationSetting.viewDistance; z++)
             {
                 var chunk = _world.ActiveChunks.Where(ch => ch.Coordinates == new Vector2Int(x, z)).FirstOrDefault();
-                if(chunk == null)
+                if (chunk == null)
                 {
                     CreateChunkAsync(x, z);
                 }
@@ -80,7 +76,6 @@ public class WorldGenerator : MonoBehaviour
                 {
                     chunksToRemove.Remove(chunk);
                 }
-               
             }
         }
 
@@ -107,14 +102,10 @@ public class WorldGenerator : MonoBehaviour
 
     private void OnBlockPickup(object sender, OnBlockEventArgs e)
     {
-
-        Debug.Log($"block pickuped: {e.BlockPosition.x},{e.BlockPosition.y},{e.BlockPosition.z}");
         var blockCoords = new Vector3Int(Mathf.RoundToInt(e.BlockPosition.x), Mathf.RoundToInt(e.BlockPosition.y), Mathf.RoundToInt(e.BlockPosition.z));
         var blocksChunk = _coordinatesUtil.GetChunkCoordsFromPosition(blockCoords);
         ChangeBlockType(blockCoords, blocksChunk, Enums.BlockType.Air);
     }
-
-
 
     private void ChangeBlockType(Vector3Int blockCoord, Vector2Int chunkCoords, Enums.BlockType blockType)
     {
@@ -125,7 +116,6 @@ public class WorldGenerator : MonoBehaviour
             chunk.Data[blockCoord] = blockType;
             UpdateChunkAsync(chunk.Coordinates.x, chunk.Coordinates.y);
         }
-
     }
     private bool CheckWorldBound(int blockY, Enums.BlockType blockType)
     {
@@ -141,8 +131,8 @@ public class WorldGenerator : MonoBehaviour
 
         var chunkData = _chunkGenerator.GetChunkData(x, z);
 
-        int groundLevel = LayerMask.NameToLayer("Ground");
-        GameObject tempChunk = new GameObject($"Chunk {x},{z}", new System.Type[]
+        int groundLevel = LayerMask.NameToLayer(Constants.GROUND_LAYER);
+        GameObject tempChunk = new GameObject($"{Constants.CHUNK} {x},{z}", new System.Type[]
         { typeof(MeshRenderer), typeof(MeshFilter), typeof(MeshCollider) });
         tempChunk.layer = groundLevel;
 
@@ -160,13 +150,8 @@ public class WorldGenerator : MonoBehaviour
 
         if (chunk != null)
         {
-
             await Task.Run(() => new ChunkMeshGenerator(_chungGenerationSetting, _mainThreadActions).CalculateMeshData(chunk));
-
-
         }
     }
-
-
 
 }

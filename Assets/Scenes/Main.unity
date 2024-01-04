@@ -167,8 +167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60d144d8b87753d46b9882ec4084dc73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiCanvas: {fileID: 2029954755}
-  _player: {fileID: 0}
+  _uiCanvas: {fileID: 2029954755}
+  _player: {fileID: 155028032}
 --- !u!1001 &72061627
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -188,6 +188,14 @@ PrefabInstance:
     - target: {fileID: 1668538936321008752, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
       propertyPath: jumpHeight
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1668538936321008752, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
+      propertyPath: _controller
+      value: 
+      objectReference: {fileID: 155028035}
+    - target: {fileID: 1668538936321008752, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
+      propertyPath: _movementSettings.GroundMask.m_Bits
+      value: 512
       objectReference: {fileID: 0}
     - target: {fileID: 2792841470361399470, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
       propertyPath: m_Name
@@ -246,12 +254,24 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1429775527}
     - target: {fileID: 4735183042256232813, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
+      propertyPath: _playerCamera
+      value: 
+      objectReference: {fileID: 1591646341}
+    - target: {fileID: 4735183042256232813, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
       propertyPath: _invetoryObject
       value: 
       objectReference: {fileID: 64725768}
     - target: {fileID: 4735183042256232813, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
       propertyPath: BoundCheckMask.m_Bits
       value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 4735183042256232813, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
+      propertyPath: _boundCheckMask.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 4735183042256232813, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
+      propertyPath: _chunkInteractMask.m_Bits
+      value: 512
       objectReference: {fileID: 0}
     - target: {fileID: 6179970071728143390, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
       propertyPath: m_Layer
@@ -413,6 +433,11 @@ CanvasRenderer:
 --- !u!1 &155028032 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2792841470361399470, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
+  m_PrefabInstance: {fileID: 72061627}
+  m_PrefabAsset: {fileID: 0}
+--- !u!143 &155028035 stripped
+CharacterController:
+  m_CorrespondingSourceObject: {fileID: 4490765774991178569, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
   m_PrefabInstance: {fileID: 72061627}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &410162063
@@ -2564,6 +2589,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1525165635}
   m_CullTransparentMesh: 1
+--- !u!4 &1591646341 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3754005568320277690, guid: e7cc4819a1861084e87f08fbac4022f3, type: 3}
+  m_PrefabInstance: {fileID: 72061627}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1724401397
 GameObject:
   m_ObjectHideFlags: 0
@@ -2591,7 +2621,7 @@ RectTransform:
   m_GameObject: {fileID: 1724401397}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.0354, y: 1.0354, z: 1.0354}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1525165636}
@@ -2892,10 +2922,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f836eb0363b2099478374a35f2e57300, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _grassText: {fileID: 1453168780}
-  _dirtText: {fileID: 643646227}
-  _rockText: {fileID: 531272332}
-  _snowText: {fileID: 1000878234}
+  _blockUIList:
+  - BlockType: 1
+    TextComponent: {fileID: 1453168780}
+    Value: 0
+  - BlockType: 2
+    TextComponent: {fileID: 643646227}
+    Value: 0
+  - BlockType: 3
+    TextComponent: {fileID: 531272332}
+    Value: 0
+  - BlockType: 5
+    TextComponent: {fileID: 1000878234}
+    Value: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

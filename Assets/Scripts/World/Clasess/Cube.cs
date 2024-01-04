@@ -4,7 +4,6 @@ namespace Assets.Scripts.Classes
 {
     public static class Cube
     {
-
         public static CubeSide DownSide
         {
             get

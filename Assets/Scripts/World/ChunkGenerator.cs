@@ -1,9 +1,8 @@
 using Assets.Scripts.Classes;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChunkGenerator 
+public class ChunkGenerator
 {
     int _randomSeed;
     ChunkGenerationSetting _setting;
@@ -17,7 +16,7 @@ public class ChunkGenerator
     {
         return new ChunkData
         {
-            Data = GenerateBasicDataForChunk(chunkX,chunkZ),
+            Data = GenerateBasicDataForChunk(chunkX, chunkZ),
             Coordinates = new Vector2Int(chunkX, chunkZ),
         };
     }
@@ -30,19 +29,20 @@ public class ChunkGenerator
         int height;
         Enums.BlockType blockType;
 
-        for(int x = startingX;  x < _setting.chunkSize.x+ startingX; x++)
+        for (int x = startingX; x < _setting.chunkSize.x + startingX; x++)
         {
-            for(int z= startingZ;  z < _setting.chunkSize.z+ startingZ; z++) 
+            for (int z = startingZ; z < _setting.chunkSize.z + startingZ; z++)
             {
                 height = GetHeighFromPerlinNoise(x, z);
-                
-                for (int y = 0; y <_setting.chunkSize.y ; y++)
+
+                for (int y = 0; y < _setting.chunkSize.y; y++)
                 {
                     blockType = Enums.BlockType.Air;
                     if (y <= height)
                     {
-                        if (y == height) { 
-                            if (y == _setting.snowHeight)
+                        if (y == height)
+                        {
+                            if (y >= _setting.snowHeight)
                             {
                                 blockType = Enums.BlockType.Snow;
                             }

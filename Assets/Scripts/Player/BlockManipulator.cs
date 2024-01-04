@@ -1,31 +1,28 @@
 using Assets.Scripts.Classes;
 using Assets.Scripts.Events;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 
 public class BlockManipulator : MonoBehaviour
 {
     [SerializeField]
-    Transform PlayerCamera;
-    [SerializeField] 
-    private LayerMask ChunkInteractMask;
+    private Transform _playerCamera;
     [SerializeField]
-    private LayerMask BoundCheckMask;
+    private LayerMask _chunkInteractMask;
     [SerializeField]
-    private float maxDistance = 8f;
-    bool isMining = false;
+    private LayerMask _boundCheckMask;
+    [SerializeField]
+    private float _maxDistance = 8f;
+    private bool _isMining = false;
 
     [SerializeField]
     private GameObject _worldObject;
     private World _world;
 
-    private Vector3Int currentTargetBlock;
+    private Vector3Int _currentTargetBlock;
     [SerializeField]
-    private float currentBlockHealth;
-    private Enums.BlockType currentBlockType;
+    private float _currentBlockHealth;
+    private Enums.BlockType _currentBlockType;
     [SerializeField]
     private GameObject _invetoryObject;
     private Inventory _invetory;
@@ -39,10 +36,9 @@ public class BlockManipulator : MonoBehaviour
         _invetory = _invetoryObject.GetComponent<Inventory>();
     }
 
-    void Update()
+    private void Update()
     {
-        Debug.DrawRay(PlayerCamera.position, PlayerCamera.forward * maxDistance, Color.red);
-        //PickupBlock();
+        Debug.DrawRay(_playerCamera.position, _playerCamera.forward * _maxDistance, Color.red);
         MiningBlock();
         PlaceBlock();
 
@@ -51,7 +47,7 @@ public class BlockManipulator : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            if (!isMining)
+            if (!_isMining)
             {
                 StartMining();
             }
@@ -60,7 +56,7 @@ public class BlockManipulator : MonoBehaviour
                 MineBlock();
             }
         }
-        else if (isMining)
+        else if (_isMining)
         {
             ResetMining();
         }
@@ -68,14 +64,12 @@ public class BlockManipulator : MonoBehaviour
 
     private void MineBlock()
     {
-        if (currentTargetBlock != null)
+        if (_currentTargetBlock != null)
         {
-            currentBlockHealth -= Time.deltaTime; // Snížení HP v èase
-            if (currentBlockHealth <= 0)
+            _currentBlockHealth -= Time.deltaTime;
+            if (_currentBlockHealth <= 0)
             {
-
-                OnBlockPickUp?.Invoke(this, new OnBlockEventArgs { BlockPosition = currentTargetBlock, BlockType = currentBlockType });
-
+                OnBlockPickUp?.Invoke(this, new OnBlockEventArgs { BlockPosition = _currentTargetBlock, BlockType = _currentBlockType });
                 ResetMining();
             }
         }
@@ -83,48 +77,43 @@ public class BlockManipulator : MonoBehaviour
 
     private void ResetMining()
     {
-        isMining = false;
-        currentTargetBlock = Vector3Int.zero;
-        currentBlockHealth = 0;
+        _isMining = false;
+        _currentTargetBlock = Vector3Int.zero;
+        _currentBlockHealth = 0;
     }
 
     private void StartMining()
     {
-        Ray ray = new Ray(PlayerCamera.position, PlayerCamera.forward);
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, maxDistance, ChunkInteractMask))
+        Ray ray = new Ray(_playerCamera.position, _playerCamera.forward);
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, _maxDistance, _chunkInteractMask))
         {
             Vector3 targetPoint = hitInfo.point - hitInfo.normal * .1f;
 
-            currentTargetBlock = new Vector3Int
+            _currentTargetBlock = new Vector3Int
             {
                 x = Mathf.RoundToInt(targetPoint.x),
                 y = Mathf.RoundToInt(targetPoint.y),
                 z = Mathf.RoundToInt(targetPoint.z)
             };
 
-            currentBlockType = _world.GetTypeOfBlock(currentTargetBlock);
-            currentBlockHealth = MinningBlockHp.GetHpByBlockType(currentBlockType);
-            isMining = true;
+            _currentBlockType = _world.GetTypeOfBlock(_currentTargetBlock);
+            _currentBlockHealth = MinningBlockHp.GetHpByBlockType(_currentBlockType);
+            _isMining = true;
         }
     }
 
-
-
-  
-
     private void PlaceBlock()
     {
-       
+
         if (Input.GetMouseButtonDown(1))
         {
             var blockType = _invetory.ActiveType;
             if (_invetory.PlayerInventory[blockType] > 0)
             {
-                Ray ray = new Ray(PlayerCamera.position, PlayerCamera.forward);
+                Ray ray = new Ray(_playerCamera.position, _playerCamera.forward);
 
-                if (Physics.Raycast(ray, out RaycastHit hitInfo, maxDistance, ChunkInteractMask))
+                if (Physics.Raycast(ray, out RaycastHit hitInfo, _maxDistance, _chunkInteractMask))
                 {
-                    Debug.Log("Placing block");
                     Vector3 targetPoint = hitInfo.point + hitInfo.normal * .1f;
 
                     Vector3Int targetBlock = new Vector3Int
@@ -134,16 +123,14 @@ public class BlockManipulator : MonoBehaviour
                         z = Mathf.RoundToInt(targetPoint.z)
                     };
 
-                    if (Physics.CheckBox(targetBlock, Vector3.one * .5f, Quaternion.identity, BoundCheckMask) == false)
+                    if (Physics.CheckBox(targetBlock, Vector3.one * .5f, Quaternion.identity, _boundCheckMask) == false)
                     {
                         OnBlockPlaced?.Invoke(this, new OnBlockEventArgs { BlockPosition = targetBlock, BlockType = blockType });
                     }
 
-
                 }
             }
 
-           
         }
     }
 }

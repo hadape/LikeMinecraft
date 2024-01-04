@@ -3,25 +3,24 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.Mesh;
 
 public class ChunkMeshGenerator
 {
-    List<Vector3> vertices;
-    List<int> triangles;
-    List<Color> colors;
+    private List<Vector3> _vertices;
+    private List<int> _triangles;
+    private List<Color> _colors;
 
-    Vector3Int checkingBlockPosition;
-    Vector3Int currentBlockPosition;
-    int tris = 0;
+    private Vector3Int _checkingBlockPosition;
+    private Vector3Int _currentBlockPosition;
+    private int _tris = 0;
 
-    MeshRenderer meshRenderer;
+    private MeshRenderer _meshRenderer;
 
-    Mesh mesh;
+    private Mesh _mesh;
 
-    ChunkGenerationSetting _chunkGenerationSetting;
+    private ChunkGenerationSetting _chunkGenerationSetting;
 
-    ConcurrentQueue<Action> _mainThreadActions;
+    private ConcurrentQueue<Action> _mainThreadActions;
 
     public ChunkMeshGenerator(ChunkGenerationSetting chunkGenerationSetting, ConcurrentQueue<Action> mainThreadActions)
     {
@@ -31,57 +30,57 @@ public class ChunkMeshGenerator
 
     public Mesh CreateMesh(ChunkData chunkData)
     {
-        mesh = new Mesh();
-        
+        _mesh = new Mesh();
+
         CalculateMeshData(chunkData);
 
-        meshRenderer = chunkData.GameObject.GetComponent<MeshRenderer>();
-        meshRenderer.material = _chunkGenerationSetting.material;
-        var arrVertices = vertices.ToArray();
+        _meshRenderer = chunkData.GameObject.GetComponent<MeshRenderer>();
+        _meshRenderer.material = _chunkGenerationSetting.material;
+        var arrVertices = _vertices.ToArray();
 
-        mesh.SetVertices(arrVertices);
-        mesh.SetIndices(triangles, MeshTopology.Triangles, 0);
-        mesh.SetColors(colors.ToArray());
+        _mesh.SetVertices(arrVertices);
+        _mesh.SetIndices(_triangles, MeshTopology.Triangles, 0);
+        _mesh.SetColors(_colors.ToArray());
 
-        mesh.RecalculateBounds();
-        mesh.RecalculateTangents();
-        mesh.RecalculateNormals();
+        _mesh.RecalculateBounds();
+        _mesh.RecalculateTangents();
+        _mesh.RecalculateNormals();
 
-        return mesh;
+        return _mesh;
     }
 
     private void DecideMesh(CubeSide cubeSide, Dictionary<Vector3Int, Enums.BlockType> basicData)
     {
-        if (basicData[currentBlockPosition] != Enums.BlockType.Air && basicData.ContainsKey(checkingBlockPosition))
+        if (basicData[_currentBlockPosition] != Enums.BlockType.Air && basicData.ContainsKey(_checkingBlockPosition))
         {
-            if (basicData[checkingBlockPosition] == Enums.BlockType.Air)
+            if (basicData[_checkingBlockPosition] == Enums.BlockType.Air)
             {
                 AddMesh(cubeSide);
-                AddColor(basicData[currentBlockPosition]);
+                AddColor(basicData[_currentBlockPosition]);
             }
         }
-        if (basicData[currentBlockPosition] != Enums.BlockType.Air && basicData.ContainsKey(checkingBlockPosition) == false)
+        if (basicData[_currentBlockPosition] != Enums.BlockType.Air && basicData.ContainsKey(_checkingBlockPosition) == false)
         {
             AddMesh(cubeSide);
-            AddColor(basicData[currentBlockPosition]);
+            AddColor(basicData[_currentBlockPosition]);
         }
 
     }
     private void AddMesh(CubeSide cubeSide)
     {
-        vertices.AddRange(Cube.IncrementSideVertices(cubeSide, currentBlockPosition).Vertices);
-        triangles.AddRange(Cube.IncrementSideTriangles(cubeSide, tris).Triangles);
-        tris += 4;
+        _vertices.AddRange(Cube.IncrementSideVertices(cubeSide, _currentBlockPosition).Vertices);
+        _triangles.AddRange(Cube.IncrementSideTriangles(cubeSide, _tris).Triangles);
+        _tris += 4;
     }
     private void AddColor(Enums.BlockType type)
     {
         switch (type)
         {
-            case Enums.BlockType.Grass: colors.AddRange(MeshColor.Green); break;
-            case Enums.BlockType.Dirt: colors.AddRange(MeshColor.Brown); break;
-            case Enums.BlockType.Rock: colors.AddRange(MeshColor.Gray); break;
-            case Enums.BlockType.Bedrock: colors.AddRange(MeshColor.Black); break;
-            case Enums.BlockType.Snow: colors.AddRange(MeshColor.White); break;
+            case Enums.BlockType.Grass: _colors.AddRange(MeshColor.Green); break;
+            case Enums.BlockType.Dirt: _colors.AddRange(MeshColor.Brown); break;
+            case Enums.BlockType.Rock: _colors.AddRange(MeshColor.Gray); break;
+            case Enums.BlockType.Bedrock: _colors.AddRange(MeshColor.Black); break;
+            case Enums.BlockType.Snow: _colors.AddRange(MeshColor.White); break;
         }
     }
 
@@ -95,81 +94,70 @@ public class ChunkMeshGenerator
                 var newMesh = new Mesh();
                 var meshRenderer = chunkData.GameObject.GetComponent<MeshRenderer>();
                 meshRenderer.material = _chunkGenerationSetting.material;
-                newMesh.SetVertices(vertices);
-                newMesh.SetTriangles(triangles, 0);
-                newMesh.SetColors(colors);
-
+                newMesh.SetVertices(_vertices);
+                newMesh.SetTriangles(_triangles, 0);
+                newMesh.SetColors(_colors);
 
                 newMesh.RecalculateBounds();
                 newMesh.RecalculateNormals();
 
                 chunkData.GameObject.GetComponent<MeshFilter>().mesh = newMesh;
                 chunkData.GameObject.GetComponent<MeshCollider>().sharedMesh = newMesh;
-
             }
         });
-
-
-
-
     }
     private void CalulateMesh(ChunkData chunkData)
     {
-        vertices = new List<Vector3>();
-        triangles = new List<int>();
-        colors = new List<Color>();
+        _vertices = new List<Vector3>();
+        _triangles = new List<int>();
+        _colors = new List<Color>();
         var startingX = ChunkCoorToRealCoor.GetRealCoor(chunkData.Coordinates.x, _chunkGenerationSetting.chunkSize.x);
         var startingZ = ChunkCoorToRealCoor.GetRealCoor(chunkData.Coordinates.y, _chunkGenerationSetting.chunkSize.z);
 
-        tris = 0;
+        _tris = 0;
         for (int x = startingX; x < _chunkGenerationSetting.chunkSize.x + startingX; x++)
         {
             for (int z = startingZ; z < _chunkGenerationSetting.chunkSize.z + startingZ; z++)
             {
                 for (int y = 0; y < _chunkGenerationSetting.chunkSize.y; y++)
                 {
-                    currentBlockPosition = new Vector3Int(x, y, z);
+                    _currentBlockPosition = new Vector3Int(x, y, z);
 
                     //checking for surrounding blocks, if any air we will have to create mesh for that side
                     foreach (Enums.Side side in (Enums.Side[])Enum.GetValues(typeof(Enums.Side)))
                     {
-                        checkingBlockPosition = Vector3Int.zero;
+                        _checkingBlockPosition = Vector3Int.zero;
                         switch (side)
                         {
                             case Enums.Side.Left:
-                                checkingBlockPosition = currentBlockPosition + Vector3Int.left;
+                                _checkingBlockPosition = _currentBlockPosition + Vector3Int.left;
                                 DecideMesh(Cube.LeftSide, chunkData.Data);
                                 break;
                             case Enums.Side.Right:
-                                checkingBlockPosition = currentBlockPosition + Vector3Int.right;
+                                _checkingBlockPosition = _currentBlockPosition + Vector3Int.right;
                                 DecideMesh(Cube.RightSide, chunkData.Data);
                                 break;
                             case Enums.Side.Up:
-                                checkingBlockPosition = currentBlockPosition + Vector3Int.up;
+                                _checkingBlockPosition = _currentBlockPosition + Vector3Int.up;
                                 DecideMesh(Cube.UpSide, chunkData.Data);
                                 break;
                             case Enums.Side.Down:
-                                checkingBlockPosition = currentBlockPosition + Vector3Int.down;
+                                _checkingBlockPosition = _currentBlockPosition + Vector3Int.down;
                                 DecideMesh(Cube.DownSide, chunkData.Data);
                                 break;
                             case Enums.Side.Front:
-                                checkingBlockPosition = currentBlockPosition + Vector3Int.forward;
+                                _checkingBlockPosition = _currentBlockPosition + Vector3Int.forward;
                                 DecideMesh(Cube.FrontSide, chunkData.Data);
                                 break;
                             case Enums.Side.Back:
-                                checkingBlockPosition = currentBlockPosition + Vector3Int.back;
+                                _checkingBlockPosition = _currentBlockPosition + Vector3Int.back;
                                 DecideMesh(Cube.BackSide, chunkData.Data);
                                 break;
-
 
                         }
                     }
                 }
             }
         }
-
-
-
-
     }
 }

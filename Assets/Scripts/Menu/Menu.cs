@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using Assets.Scripts;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -15,7 +12,7 @@ public class Menu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if(gamePaused)
+            if (gamePaused)
             {
                 Resume();
             }
@@ -44,12 +41,12 @@ public class Menu : MonoBehaviour
 
     public void LoadGame()
     {
-        SceneManager.LoadScene("Main");
+        SceneManager.LoadScene(Constants.MAIN);
     }
     public void LoadMainMenu()
     {
         Time.timeScale = 1.0f;
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene(Constants.MAIN_MENU);
     }
     public void ExitGame()
     {
