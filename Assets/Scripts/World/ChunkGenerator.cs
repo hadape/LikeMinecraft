@@ -61,6 +61,7 @@ public class ChunkGenerator
 
     private int GetHeighFromPerlinNoise(int x, int z)
     {
+        //TODO: add octaves and use amplitute, frequency for better generaton of terrein
         float perlinCoordsX = _setting.noiseOffset.x + _randomSeed + x / (float)_setting.chunkSize.x * _setting.noiseScale.x;
         float perlinCoordY = _setting.noiseOffset.y + +_randomSeed + z / (float)_setting.chunkSize.z * _setting.noiseScale.y;
 
